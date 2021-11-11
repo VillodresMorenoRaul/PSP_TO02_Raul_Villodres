@@ -1,6 +1,9 @@
 package org.example;
 
-import sun.tools.tree.SynchronizedStatement;
+import java.text.DecimalFormat;
+
+import static org.example.Main.cuenta1;
+import static org.example.Main.cuenta2;
 
 public class Cuenta {
     private Double saldo;
@@ -36,7 +39,7 @@ public class Cuenta {
 
     //Devolver el saldo actual
     public synchronized String obtenerSaldo(){
-        return "El saldo actual de la cuenta " + getNombreCuenta() + "Es de: " + getSaldo();
+        return "El saldo actual de la cuenta " + getNombreCuenta() + "Es de: " + convertir(getSaldo());
     }
 
     //Realizar un ingreso
@@ -57,9 +60,37 @@ public class Cuenta {
     }
 
     //Transferir dinero de una cuenta a otra
-    public synchronized String realizarTransferencia(){
+    public synchronized String realizarTransferencia(String nombreCuenta, Double dinero) {
+        if (cuenta1.getNombreCuenta() == nombreCuenta) {
+            cuenta1.setSaldo(cuenta1.getSaldo() - dinero);
+            cuenta2.setSaldo(cuenta2.getSaldo() + dinero);
 
+            if (cuenta1.getSaldo() < 0) {
+                cuenta1.setSaldo(cuenta1.getSaldo() + dinero);
+                cuenta1.setSaldo(cuenta2.getSaldo() - dinero);
+                return "No se pudo realizar la transferencia, la cuenta se quedó en números negativos";
+            } else {
+                return "La transferencia se realizó correctamente";
+            }
+        } else {
+            cuenta2.setSaldo(cuenta2.getSaldo() - dinero);
+            cuenta2.setSaldo(cuenta1.getSaldo() + dinero);
+
+            if (cuenta2.getSaldo() < 0) {
+                cuenta2.setSaldo(cuenta2.getSaldo() + dinero);
+                cuenta2.setSaldo(cuenta1.getSaldo() - dinero);
+                return "No se pudo realizar la transferencia, la cuenta se quedó en números negativos";
+            } else {
+                return "La transferencia se realizó correctamente";
+            }
+        }
     }
 
     //Redondear saldo a dos decimales
+    public static Double convertir (Double valor){
+        DecimalFormat formato = new DecimalFormat("#.00");
+        String valorString = formato.format(valor).replace(",",".");
+        valor = Double.valueOf(valorString);
+        return valor;
+    }
 }

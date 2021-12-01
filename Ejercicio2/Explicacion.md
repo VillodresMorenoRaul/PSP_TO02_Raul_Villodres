@@ -1,157 +1,162 @@
-CÓMO EVITÉ EL INTERBLOQUEO
+**<span style="text-decoration:underline;">CÓMO EVITÉ EL INTERBLOQUEO</span>**
 
 Cómo se nos explicó en clase, el interbloqueo sucede cuando todos los filosofos toman el palillo de su derecha, esto provoca que todos tengan un palillo y esperen indefinidamente.
 
-Esto lo solucioné añadiendo una variable booleana llamada "zurdo", aplicandola al primer proceso filósofo, y cambiando el método para que el filosofo zurdo empiece a tomar los palillos por el de su izquierda.
+Esto lo solucioné añadiendo una variable booleana llamada “zurdo”, aplicandola al primer proceso filósofo, y cambiando el método para que el filosofo zurdo empiece a tomar los palillos por el de su izquierda.
 
 -En el método intentarCogerPalillo de la clase GestorPalillos, donde además de solicitar las varibales habituales, solicitamos también el boolean, en caso de no sea zurdo, seguimos lo que hace el programa normalmente, pero si lo es, cambiamos el orden en el que se cogen los palillos
 
-intentarCogerPalillos(int pos1, int pos2, boolean zurdo)
+    intentarCogerPalillos(int pos1, int pos2, **<span style="text-decoration:underline;">boolean zurdo</span>**)
 
-    {
+    {
 
-        boolean seConsigue=false;
+        boolean seConsigue=false;
 
-        if(!zurdo){
+        if(**<span style="text-decoration:underline;">!zurdo</span>**){
 
-            if (
+            if (
 
-                    (palilloLibre[pos1])
+                    (palilloLibre[pos1])
 
-                            &&
+                            &&
 
-                            (palilloLibre[pos2]) )
+                            (palilloLibre[pos2]) )
 
-            {
+            {
 
-                palilloLibre[pos1]=false;
+                palilloLibre[pos1]=false;
 
-                palilloLibre[pos2]=false;
+                palilloLibre[pos2]=false;
 
-                seConsigue=true;
+                seConsigue=true;
 
-            } //Fin del if
+            } //Fin del if
 
-} else {
+        } **<span style="text-decoration:underline;">else {</span>**
 
-            if (
+**<span style="text-decoration:underline;">            if (</span>**
 
-                    (palilloLibre[pos2])
+**<span style="text-decoration:underline;">                    (palilloLibre[pos2])</span>**
 
-                            &&
+**<span style="text-decoration:underline;">                            &&</span>**
 
-                            (palilloLibre[pos1])) {
+**<span style="text-decoration:underline;">                            (palilloLibre[pos1])) {</span>**
 
-                palilloLibre[pos2] = false;
+**<span style="text-decoration:underline;">                palilloLibre[pos2] = false;</span>**
 
-                palilloLibre[pos1] = false;
+**<span style="text-decoration:underline;">                palilloLibre[pos1] = false;</span>**
 
-                seConsigue = true;
+**<span style="text-decoration:underline;">                seConsigue = true;</span>**
 
-            }
+            }
 
-        }
+        }
 
-En el método run también hay que realizar cambios para incorporar esto. En primer lugar crearemos un condicional que en caso de que el nombre del Thread sea "Thread-0" pondrá el booleano zurdo cómo true
+En el método run también hay que realizar cambios para incorporar esto. En primer lugar crearemos un condicional que en caso de que el nombre del Thread sea “Thread-0” pondrá el booleano zurdo cómo true
 
-            if(Thread.currentThread().getName().equals("Thread-0")){
+            if(Thread.currentThread().getName().equals("Thread-0")){
 
-                zurdo = true;
+                zurdo = true;
 
-            } else {
+            } else {
 
-                zurdo = false;
+                zurdo = false;
 
-            }
+            }
 
 En el método liberarPalillos también cambiaremos el orden en el que se sueltan
 
-    public void liberarPalillos(int pos1, int pos2, boolean zurdo){
+    public void liberarPalillos(int pos1, int pos2, boolean zurdo){
 
-        if (!zurdo){
+        if (!zurdo){
 
-            palilloLibre[pos1]=true;
+            palilloLibre[pos1]=true;
 
-            palilloLibre[pos2]=true;
+            palilloLibre[pos2]=true;
 
-        } else {
+        } else {
 
-            palilloLibre[pos2]=true;
+            palilloLibre[pos2]=true;
 
-            palilloLibre[pos1]=true;
+            palilloLibre[pos1]=true;
 
-        }
+        }
 
-    }
+    }
 
-Y en el run tenemos que pasarle esta variable "zurdo" al método palillosCogidos
+Y en el run tenemos que pasarle esta variable “zurdo” al método palillosCogidos
 
 palillosCogidos = this.gestorPalillos.intentarCogerPalillos(posPalilloIzq, posPalilloDer, zurdo );
 
 Y al método liberarPalillos
 
-this.gestorPalillos.liberarPalillos(posPalilloIzq,  posPalilloDer, zurdo);
+this.gestorPalillos.liberarPalillos(posPalilloIzq,  posPalilloDer, zurdo);
 
-CÓMO EVITÉ LA INANICIÓN
+**<span style="text-decoration:underline;">CÓMO EVITÉ LA INANICIÓN</span>**
 
-Para evitar la inanición he tratado con el setPriority de cada Thread, dentro del propio run de la clase filósofo.
+Para evitar la inanición he tratado con el setPriority de cada Thread, dentro del propio run de la clase filósofo. 
 
-Dentro de la condición if (palillosCogidos), resetearemos el valor de prioridad a 10 con un "prioridad = 10", y luego usaremos "Thread.currentThread().setPriority(prioridad)", para darle dicha prioridad.
+Dentro de la condición if (palillosCogidos), resetearemos el valor de prioridad a 10 con un “prioridad = 10”, y luego usaremos “Thread.currentThread().setPriority(prioridad)”, para darle dicha prioridad.
 
-Añadimos un else a "if(palillosCogidos)", y en este primero comprobaremos que el estado de prioridad sea menor que "1" (Para no salirnos del limite de prioridad), si lo es, reducimos número con un "prioridad--", y cómo en el caso anterior aplicamos la prioridad en este hilo con "Thread.currentThread().setPriority(prioridad)"
+Añadimos un else a “if(palillosCogidos)”, y en este primero comprobaremos que el estado de prioridad sea menor que “1” (Para no salirnos del limite de prioridad), si lo es, reducimos número con un “prioridad--”, y cómo en el caso anterior aplicamos la prioridad en este hilo con “Thread.currentThread().setPriority(prioridad)”  
 
-El "Thread.currentThread().setPriority(prioridad)" se compone de el currentThread(), que permite usar nuestro Thread actual, y el setPriority, que nos permite poner un número entre 1 y 10, cuando menor sea el número más prioridad para nuestro hilo
+El “Thread.currentThread().setPriority(prioridad)” se compone de el currentThread(), que permite usar nuestro Thread actual, y el setPriority, que nos permite poner un número entre 1 y 10, cuando menor sea el número más prioridad para nuestro hilo
+
+ 
 
 int prioridad;
 
+    
+
 public void run() {
 
-        while (true){
+        while (true){
 
-            if(Thread.currentThread().getName().equals("Thread-0")){
+            if(Thread.currentThread().getName().equals("Thread-0")){
 
-                zurdo = true;
+                zurdo = true;
 
-            } else {
+            } else {
 
-                zurdo = false;
+                zurdo = false;
 
-            }
+            }
 
-            palillosCogidos=
+            palillosCogidos=
 
-                    this.gestorPalillos.intentarCogerPalillos(
+                    this.gestorPalillos.intentarCogerPalillos(
 
-                            posPalilloIzq, posPalilloDer, zurdo );
+                            posPalilloIzq, posPalilloDer, zurdo );
 
-            if (palillosCogidos){
+            if (palillosCogidos){
 
-                comer();
+                comer();
 
-                this.gestorPalillos.liberarPalillos(
+                this.gestorPalillos.liberarPalillos(
 
-                        posPalilloIzq,
+                        posPalilloIzq,
 
-                        posPalilloDer, zurdo);
+                        posPalilloDer, zurdo);
 
-                dormir();
+                dormir();
 
-                Prioridad = 10;
+               ** <span style="text-decoration:underline;">Prioridad = 10;</span>**
 
-                Thread.currentThread().setPriority(Prioridad);
+**                <span style="text-decoration:underline;">Thread.currentThread().setPriority(Prioridad);</span>**
 
-            } else {
+            } else {
 
-                if(Prioridad > 1) {
+                **<span style="text-decoration:underline;">if(Prioridad > 1) {</span>**
 
-                    Prioridad--;
+**                    <span style="text-decoration:underline;">Prioridad--;</span>**
 
-                    Thread.currentThread().setPriority(Prioridad);
+**                    <span style="text-decoration:underline;">Thread.currentThread().setPriority(Prioridad);</span>**
 
-                }
+**<span style="text-decoration:underline;">                }</span>**
 
-            }
+            }
 
-        } //Fin del while true
+        } //Fin del while true
 
-    } //Fin del run()
+    } //Fin del run()
+

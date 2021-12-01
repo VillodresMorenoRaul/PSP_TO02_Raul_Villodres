@@ -44,7 +44,7 @@ public class Persona extends Cuenta implements Runnable {
 
             //Ingreso de Dinero
             if(decision == 1){
-                System.out.println("El usuario " + nombreUsuario + ", " + cuenta.realizarIngreso(dinero));
+                System.out.println("El usuario " + nombreUsuario + " ha realizado un deposito, " + cuenta.realizarIngreso(dinero));
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -53,7 +53,7 @@ public class Persona extends Cuenta implements Runnable {
 
             //Retirar dinero
             } else if(decision == 2){
-                System.out.println("El usuario " + nombreUsuario + ", " + cuenta.retirarDinero(dinero));
+                System.out.println("El usuario " + nombreUsuario + ", " + " Ha intentado retirar dinero: " + cuenta.retirarDinero(dinero));
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -62,7 +62,7 @@ public class Persona extends Cuenta implements Runnable {
 
             //Realizar una transferencia de una cuenta a otra
             } else if(decision == 3){
-                System.out.println("El usuario " + nombreUsuario + "ha hecho una transferencia desde " + cuenta.realizarTransferencia(cuenta.getNombreCuenta(), dinero));
+                System.out.println("El usuario " + nombreUsuario + " ha intentado realizar una transferencia desde " + cuenta.getNombreCuenta() + ", " + cuenta.realizarTransferencia(cuenta.getNombreCuenta(), dinero));
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -70,7 +70,7 @@ public class Persona extends Cuenta implements Runnable {
                 }
             }
 
-            System.out.println("El usuario " + nombreUsuario + " ha consultado los datos, " + cuenta.obtenerSaldo());
+            System.out.println("El usuario " + nombreUsuario + " ha consultado los datos de la cuenta '" + cuenta.getNombreCuenta() + "', Su saldo es de: "  + cuenta.obtenerSaldo());
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

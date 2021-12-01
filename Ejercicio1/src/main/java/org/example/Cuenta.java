@@ -39,13 +39,13 @@ public class Cuenta {
 
     //Devolver el saldo actual
     public synchronized String obtenerSaldo(){
-        return "El saldo actual de la cuenta " + getNombreCuenta() + "Es de: " + convertir(getSaldo());
+        return String.valueOf(convertir(getSaldo()));
     }
 
     //Realizar un ingreso
     public synchronized String realizarIngreso(Double dinero){
         this.saldo = this.saldo + dinero;
-        return "El dinero ingresado es de " + dinero;
+        return "El dinero ingresado es de " + dinero + "€";
     }
 
     //Retirar dinero
@@ -55,12 +55,14 @@ public class Cuenta {
             this.saldo = this.saldo + dinero;
             return "No se pudo retirar dinero porque se retiraría más del que hay, la retirada de dinero fue cancelada";
         } else {
-            return "Se ha realizado la retirada de dinero de forma exitosa, la cantidad retirada es de " + dinero;
+            return "Se ha realizado la retirada de dinero de forma exitosa, la cantidad retirada es de " + dinero + "€";
         }
     }
 
     //Transferir dinero de una cuenta a otra
     public synchronized String realizarTransferencia(String nombreCuenta, Double dinero) {
+
+        //Comprobamos si el valor de la cuenta es el de la cuenta1, si es el caso, transferimos de la cuenta 1 a la 2, en caso contrario de la 2 a la 1
         if (cuenta1.getNombreCuenta() == nombreCuenta) {
             cuenta1.setSaldo(cuenta1.getSaldo() - dinero);
             cuenta2.setSaldo(cuenta2.getSaldo() + dinero);
@@ -68,7 +70,7 @@ public class Cuenta {
             if (cuenta1.getSaldo() < 0) {
                 cuenta1.setSaldo(cuenta1.getSaldo() + dinero);
                 cuenta1.setSaldo(cuenta2.getSaldo() - dinero);
-                return "No se pudo realizar la transferencia, la cuenta se quedó en números negativos";
+                return "Pero No se pudo realizar la transferencia, la cuenta se quedó en números negativos";
             } else {
                 return "La transferencia se realizó correctamente";
             }

@@ -47,6 +47,5 @@ public class Main extends Persona implements Runnable{
             System.err.println("Uno o varios hilos no pudieron iniciarse");
         }
 
-        System.out.println("Fin del programa");
     }
 }
